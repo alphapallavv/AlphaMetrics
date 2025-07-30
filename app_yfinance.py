@@ -31,6 +31,32 @@ with st.sidebar:
 
 # User input
 ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="TSLA")
+# --- Main Content ---
+st.title(f"📊 Stock Analysis for {ticker.upper()}")
+
+try:
+    data = yf.download(ticker, period=period, interval=interval)
+    if data.empty:
+        st.warning("⚠️ No data found for this ticker. Please check the symbol and try again.")
+    else:
+        st.success(f"Showing data for {ticker.upper()} | Period: {period} | Interval: {interval}")
+        st.dataframe(data.tail())
+
+        # Plot
+        fig = go.Figure()
+        fig.add_trace(go.Candlestick(
+            x=data.index,
+            open=data['Open'],
+            high=data['High'],
+            low=data['Low'],
+            close=data['Close'],
+            name="Candlestick"
+        ))
+        fig.update_layout(title=f"{ticker.upper()} Price Chart", xaxis_title="Date", yaxis_title="Price", xaxis_rangeslider_visible=False)
+        st.plotly_chart(fig, use_container_width=True)
+
+except Exception as e:
+    st.error(f"🚨 Error: {e}")
 
 try:
     data = yf.download(ticker, period=period, interval=interval)
