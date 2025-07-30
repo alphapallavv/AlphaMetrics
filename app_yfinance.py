@@ -46,11 +46,10 @@ try:
         # Plot
         st.line_chart(data["Close"], use_container_width=True)
 try:
-    # Your data fetching code
     data = yf.download(ticker, start=start_date, end=end_date)
 
-    # Moving Average
     if not data.empty:
+        # Moving Average
         ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
         data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
 
@@ -60,6 +59,7 @@ try:
 
 except Exception as e:
     st.error("Error fetching data. Please ensure the ticker is correct.")
+
 
 if ticker:
     stock = yf.Ticker(ticker)
