@@ -21,10 +21,6 @@ try:
     data = yf.download(ticker, period=period, interval=interval)
     ...
 
-# App title
-st.title("📊 ALPHAMETRICS (Stock Analysis Dashboard) -by Pallav")
-st.subheader(f"Showing data for: `{ticker.upper()}`")
-
 # User input
 ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="TSLA")
 
