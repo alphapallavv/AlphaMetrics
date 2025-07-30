@@ -33,7 +33,7 @@ with st.sidebar:
 st.title(f"📊 ALPHA METRICS - Stock Analysis for {ticker.upper()} -by Pallav")
 
 # User input
-ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="____")
+ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="Enter Ticker")
 
 try:
     data = yf.download(ticker, period=period, interval=interval)
