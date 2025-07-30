@@ -3,7 +3,7 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 
 # Set page config
-st.set_page_config(page_title="ALPHAMETRICS (Stock Analysis) -by Pallav", layout="centered")
+st.set_page_config(page_title="ALPHAMETRICS (Stock Analysis) -by Pallav", layout="wide")
 
 # Sidebar
 with st.sidebar:
