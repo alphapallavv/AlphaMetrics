@@ -32,24 +32,31 @@ with st.sidebar:
 # --- Main Content ---
 st.title(f"📊 ALPHA METRICS - Stock Analysis for {ticker.upper()} -by Pallav")
 
-
-# User input
-ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="TSLA")
-
 try:
-    data = yf.download(ticker, start=start_date, end=end_date)
+    # Download data
+    data = yf.download(ticker, period=period, interval=interval)
 
     if not data.empty:
+        st.success("Data fetched successfully.")
+        st.dataframe(data.tail())
+
+        # Price Chart
+        st.subheader("Stock Closing Price")
+        st.line_chart(data["Close"], use_container_width=True)
+
         # Moving Average
+        st.subheader("Moving Average Chart")
         ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
         data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
 
         st.line_chart(data[[f"MA_{ma_days}", "Close"]].dropna(), use_container_width=True)
+
     else:
         st.warning("No data found. Please check the ticker symbol.")
 
 except Exception as e:
     st.error("Error fetching data. Please ensure the ticker is correct.")
+
 
 
 if ticker:
