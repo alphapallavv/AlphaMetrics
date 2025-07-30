@@ -7,19 +7,27 @@ st.set_page_config(page_title="ALPHA METRICS (Stock Analysis) -by Pallav", layou
 
 # --- SIDEBAR ---
 with st.sidebar:
+    st.markdown("## 🔍 **ALPHAMETRICS**", unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <a href='https://www.linkedin.com/in/YOUR_LINKEDIN' target='_blank' style='text-decoration: none;'>
+            <span style='font-size: 16px;'>🔗 <strong>LinkedIn Profile</strong></span>
+        </a>
+        """, unsafe_allow_html=True
+    )
+
+    st.markdown("---")
+
+    st.subheader("📈 Stock Ticker Input")
+    st.write("Enter a valid stock ticker (e.g., AAPL, TSLA, MSFT, BMW.DE, BLK)")
     ticker = st.text_input("Ticker Symbol", "AAPL")
-    period = st.selectbox("Time Period", [...])
-    interval = st.selectbox("Interval", [...])
 
-# Check for empty ticker
-if not ticker:
-    st.warning("Please enter a valid ticker symbol.")
-    st.stop()
+    st.subheader("📆 Select Time Period")
+    period = st.selectbox("Time Period", ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"], index=4)
 
-# Try fetching data
-try:
-    data = yf.download(ticker, period=period, interval=interval)
-    ...
+    st.subheader("⏱️ Select Interval")
+    interval = st.selectbox("Interval", ["1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d", "1wk", "1mo", "3mo"], index=7)
 
 # User input
 ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="TSLA")
