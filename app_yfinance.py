@@ -37,15 +37,9 @@ st.title(f"📊 ALPHA METRICS - Stock Analysis for {ticker.upper()} -by Pallav")
 ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="TSLA")
 
 try:
-    data = yf.download(ticker, period=period, interval=interval)
+    data = yf.download(ticker, start=start_date, end=end_date)
 
     if not data.empty:
-        st.success("Data fetched successfully.")
-        st.dataframe(data.tail())
-
-        # Plot
-        st.line_chart(data["Close"], use_container_width=True)
-
         # Moving Average
         ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
         data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
