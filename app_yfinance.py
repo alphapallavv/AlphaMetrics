@@ -31,8 +31,7 @@ with st.sidebar:
 
 # User input
 ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="TSLA")
-# --- Main Content ---
-st.title(f"📊 ALPHA METRICS - Stock Analysis for {ticker.upper()} -by Pallav")
+
 try:
     data = yf.download(ticker, period=period, interval=interval)
 
@@ -43,15 +42,16 @@ try:
         # Plot
         st.line_chart(data["Close"], use_container_width=True)
 
-       # Moving Average
-ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
-ma_column = f"MA_{ma_days}"
-data[ma_column] = data["Close"].rolling(window=ma_days).mean()
+        # Moving Average
+        ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
+        data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
 
-# Drop NaN values before plotting
-plot_data = data[[ma_column, "Close"]].dropna()
+        st.line_chart(data[[f"MA_{ma_days}", "Close"]], use_container_width=True)
+    else:
+        st.warning("No data found. Please check the ticker symbol.")
 
-st.line_chart(plot_data, use_container_width=True)
+except Exception as e:
+    st.error("Error fetching data. Please ensure the ticker is correct.")
 
 if ticker:
     stock = yf.Ticker(ticker)
