@@ -6,8 +6,28 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="ALPHA METRICS (Stock Analysis) -by Pallav", layout="wide")
 
 # --- SIDEBAR ---
-# Sidebar input (this should be the only one)
 with st.sidebar:
+      st.markdown("## 🔍 **ALPHA METRICS**", unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <a href='https://www.linkedin.com/in/YOUR_LINKEDIN' target='_blank' style='text-decoration: none;'>
+            <span style='font-size: 16px;'>🔗 <strong>LinkedIn Profile</strong></span>
+        </a>
+        """, unsafe_allow_html=True
+    )
+  st.markdown("---")
+
+    st.subheader("📈 Stock Ticker Input")
+    st.write("Enter a valid stock ticker (e.g., AAPL, TSLA, MSFT, BMW.DE, BLK)")
+    ticker = st.text_input("Ticker Symbol", "AAPL")
+
+    st.subheader("📆 Select Time Period")
+    period = st.selectbox("Time Period", ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"], index=4)
+
+    st.subheader("⏱️ Select Interval")
+    interval = st.selectbox("Interval", ["1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d", "1wk", "1mo", "3mo"], index=7)
+
     ticker = st.text_input("Ticker Symbol", "AAPL")
     period = st.selectbox("Time Period", [...])
     interval = st.selectbox("Interval", [...])
@@ -21,29 +41,6 @@ if not ticker:
 try:
     data = yf.download(ticker, period=period, interval=interval)
     ...
-
-with st.sidebar:
-    st.markdown("## 🔍 **ALPHA METRICS**", unsafe_allow_html=True)
-
-    st.markdown(
-        """
-        <a href='https://www.linkedin.com/in/YOUR_LINKEDIN' target='_blank' style='text-decoration: none;'>
-            <span style='font-size: 16px;'>🔗 <strong>LinkedIn Profile</strong></span>
-        </a>
-        """, unsafe_allow_html=True
-    )
-
-    st.markdown("---")
-
-    st.subheader("📈 Stock Ticker Input")
-    st.write("Enter a valid stock ticker (e.g., AAPL, TSLA, MSFT, BMW.DE, BLK)")
-    ticker = st.text_input("Ticker Symbol", "AAPL")
-
-    st.subheader("📆 Select Time Period")
-    period = st.selectbox("Time Period", ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"], index=4)
-
-    st.subheader("⏱️ Select Interval")
-    interval = st.selectbox("Interval", ["1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d", "1wk", "1mo", "3mo"], index=7)
 
 # App title
 st.title("📊 ALPHAMETRICS (Stock Analysis Dashboard) -by Pallav")
