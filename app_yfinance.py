@@ -11,7 +11,7 @@ with st.sidebar:
 
     st.markdown(
         """
-        <a href='https://www.linkedin.com/in/YOUR_LINKEDIN' target='_blank' style='text-decoration: none;'>
+        <a href='https://www.linkedin.com/in/pallav-ukey-4364a1301/' target='_blank' style='text-decoration: none;'>
             <span style='font-size: 16px;'>🔗 <strong>LinkedIn Profile</strong></span>
         </a>
         """, unsafe_allow_html=True
