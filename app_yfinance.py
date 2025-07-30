@@ -6,6 +6,22 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="ALPHA METRICS (Stock Analysis) -by Pallav", layout="wide")
 
 # --- SIDEBAR ---
+# Sidebar input (this should be the only one)
+with st.sidebar:
+    ticker = st.text_input("Ticker Symbol", "AAPL")
+    period = st.selectbox("Time Period", [...])
+    interval = st.selectbox("Interval", [...])
+
+# Check for empty ticker
+if not ticker:
+    st.warning("Please enter a valid ticker symbol.")
+    st.stop()
+
+# Try fetching data
+try:
+    data = yf.download(ticker, period=period, interval=interval)
+    ...
+
 with st.sidebar:
     st.markdown("## 🔍 **ALPHA METRICS**", unsafe_allow_html=True)
 
