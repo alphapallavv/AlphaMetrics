@@ -32,37 +32,34 @@ with st.sidebar:
 # --- Main Content ---
 st.title(f"📊 ALPHA METRICS - Stock Analysis for {ticker.upper()} -by Pallav")
 
+# Ticker input
+ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="AAPL")
+
 try:
     data = yf.download(ticker, period=period, interval=interval)
+
+    # 👉 Fix for MultiIndex columns
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(1)
 
     if data is not None and not data.empty:
         st.success(f"Data for {ticker.upper()} fetched successfully.")
         st.dataframe(data.tail())
 
-        # Price chart
-        st.subheader("Closing Price")
-        st.line_chart(data["Close"], use_container_width=True)
-
         # Moving Average
-        if "Close" in data.columns:
-            st.subheader("Moving Average")
-            ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
+        st.subheader("Moving Average")
+        ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
 
-            if len(data) >= ma_days:
-                data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
-                st.line_chart(data[[f"MA_{ma_days}", "Close"]].dropna(), use_container_width=True)
-            else:
-                st.warning(f"Not enough data points ({len(data)}) for {ma_days}-day moving average.")
+        if "Close" in data.columns and len(data) >= ma_days:
+            data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
+            st.line_chart(data[[f"MA_{ma_days}", "Close"]].dropna(), use_container_width=True)
         else:
-            st.error("Close column not found in data.")
+            st.warning("Not enough data for Moving Average or 'Close' column missing.")
     else:
         st.warning("No data found. Please check the ticker, period, or interval.")
 
 except Exception as e:
     st.error(f"Error fetching data: {str(e)}")
-if ticker:
-    stock = yf.Ticker(ticker)
-
     # Basic Info
     info = stock.info
     st.subheader("🏢 Company Info")
