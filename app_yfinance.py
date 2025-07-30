@@ -3,17 +3,31 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 
 # Set page config
-st.set_page_config(page_title="ALPHAMETRICS (Stock Analysis) -by Pallav", layout="wide")
+st.set_page_config(page_title="ALPHA METRICS (Stock Analysis) -by Pallav", layout="wide")
 
-# Sidebar
+# --- SIDEBAR ---
 with st.sidebar:
-    st.title("🔍 ALPHAMETRICS")
-    st.markdown("[Visit my LinkedIn](https://www.linkedin.com/in/pallav-ukey-4364a1301/)", unsafe_allow_html=True)
-    st.write("---")
-    st.header("Stock Ticker Input")
-    ticker = st.text_input("Enter a valid stock ticker (e.g., AAPL, TSLA, MSFT, BMW.DE, BLK)", value="AAPL")
-    period = st.selectbox("Select Time Period", ["1mo", "3mo", "6mo", "1y", "2y", "5y"], index=2)
-    interval = st.selectbox("Select Interval", ["1d", "1h", "1wk"], index=0)
+    st.markdown("## 🔍 **ALPHA METRICS**", unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <a href='https://www.linkedin.com/in/YOUR_LINKEDIN' target='_blank' style='text-decoration: none;'>
+            <span style='font-size: 16px;'>🔗 <strong>LinkedIn Profile</strong></span>
+        </a>
+        """, unsafe_allow_html=True
+    )
+
+    st.markdown("---")
+
+    st.subheader("📈 Stock Ticker Input")
+    st.write("Enter a valid stock ticker (e.g., AAPL, TSLA, MSFT, BMW.DE, BLK)")
+    ticker = st.text_input("Ticker Symbol", "AAPL")
+
+    st.subheader("📆 Select Time Period")
+    period = st.selectbox("Time Period", ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"], index=4)
+
+    st.subheader("⏱️ Select Interval")
+    interval = st.selectbox("Interval", ["1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d", "1wk", "1mo", "3mo"], index=7)
 
 # App title
 st.title("📊 ALPHAMETRICS (Stock Analysis Dashboard) -by Pallav")
