@@ -19,6 +19,10 @@ with st.sidebar:
 
     st.markdown("---")
 
+    st.subheader("📈 Stock Ticker Input")
+    st.write("Enter a valid stock ticker (e.g., AAPL, TSLA, MSFT, BMW.DE, BLK)")
+    ticker = st.text_input("Ticker Symbol", "AAPL")
+
     st.subheader("📆 Select Time Period")
     period = st.selectbox("Time Period", ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"], index=4)
 
@@ -29,7 +33,6 @@ with st.sidebar:
 st.title(f"📊 ALPHA METRICS - Stock Analysis for {ticker.upper()} -by Pallav")
 
 # User input
-ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="TSLA")
 
 try:
     data = yf.download(ticker, period=period, interval=interval)
