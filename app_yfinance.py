@@ -33,32 +33,33 @@ with st.sidebar:
 st.title(f"📊 ALPHA METRICS - Stock Analysis for {ticker.upper()} -by Pallav")
 
 try:
-    # Download data
     data = yf.download(ticker, period=period, interval=interval)
 
-    if not data.empty:
-        st.success("Data fetched successfully.")
+    if data is not None and not data.empty:
+        st.success(f"Data for {ticker.upper()} fetched successfully.")
         st.dataframe(data.tail())
 
-        # Price Chart
-        st.subheader("Stock Closing Price")
+        # Price chart
+        st.subheader("Closing Price")
         st.line_chart(data["Close"], use_container_width=True)
 
         # Moving Average
-        st.subheader("Moving Average Chart")
-        ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
-        data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
+        if "Close" in data.columns:
+            st.subheader("Moving Average")
+            ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
 
-        st.line_chart(data[[f"MA_{ma_days}", "Close"]].dropna(), use_container_width=True)
-
+            if len(data) >= ma_days:
+                data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
+                st.line_chart(data[[f"MA_{ma_days}", "Close"]].dropna(), use_container_width=True)
+            else:
+                st.warning(f"Not enough data points ({len(data)}) for {ma_days}-day moving average.")
+        else:
+            st.error("Close column not found in data.")
     else:
-        st.warning("No data found. Please check the ticker symbol.")
+        st.warning("No data found. Please check the ticker, period, or interval.")
 
 except Exception as e:
-    st.error("Error fetching data. Please ensure the ticker is correct.")
-
-
-
+    st.error(f"Error fetching data: {str(e)}")
 if ticker:
     stock = yf.Ticker(ticker)
 
