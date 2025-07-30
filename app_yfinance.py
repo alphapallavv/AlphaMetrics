@@ -29,6 +29,10 @@ with st.sidebar:
     st.subheader("⏱️ Select Interval")
     interval = st.selectbox("Interval", ["1m", "2m", "5m", "15m", "30m", "60m", "90m", "1d", "5d", "1wk", "1mo", "3mo"], index=7)
 
+# --- Main Content ---
+st.title(f"📊 ALPHA METRICS - Stock Analysis for {ticker.upper()} -by Pallav")
+
+
 # User input
 ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="TSLA")
 
@@ -41,12 +45,16 @@ try:
 
         # Plot
         st.line_chart(data["Close"], use_container_width=True)
+try:
+    # Your data fetching code
+    data = yf.download(ticker, start=start_date, end=end_date)
 
-        # Moving Average
+    # Moving Average
+    if not data.empty:
         ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
         data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
 
-        st.line_chart(data[[f"MA_{ma_days}", "Close"]], use_container_width=True)
+        st.line_chart(data[[f"MA_{ma_days}", "Close"]].dropna(), use_container_width=True)
     else:
         st.warning("No data found. Please check the ticker symbol.")
 
