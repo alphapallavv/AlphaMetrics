@@ -1,46 +1,59 @@
 import streamlit as st
 import yfinance as yf
-import pandas as pd
-import plotly.graph_objs as go
+import matplotlib.pyplot as plt
 
-# App Title
-st.set_page_config(page_title="ALPHAMETRICS", layout="wide")
-st.title("ALPHAMETRICS")
+# Set page config
+st.set_page_config(page_title="ALPHAMETRICS", layout="centered")
 
-# Sidebar
-st.sidebar.title("Navigation")
-st.sidebar.markdown("[Connect on LinkedIn](https://www.linkedin.com/in/pallav-ukey-4364a1301/)", unsafe_allow_html=True)
+# Add LinkedIn profile to sidebar
+st.sidebar.markdown("### 🔗 Connect with Me")
+st.sidebar.markdown(
+    "[![LinkedIn](https://img.shields.io/badge/LinkedIn--blue?style=social&logo=linkedin)](https://www.linkedin.com/in/pallav-ukey-4364a1301/)",
+    unsafe_allow_html=True
+)
 
-# Ticker Input
-ticker_symbol = st.text_input("Enter Stock Ticker (e.g., AAPL, TSLA, MSFT)", "AAPL")
+# App title
+st.title("📊 ALPHAMETRICS - Stock Analysis Dashboard")
 
-# Date Range
-start_date = st.date_input("Start Date", pd.to_datetime("2023-01-01"))
-end_date = st.date_input("End Date", pd.to_datetime("today"))
+# User input
+ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="TSLA")
 
-# Load data
-@st.cache_data
-def load_data(symbol, start, end):
-    data = yf.download(symbol, start=start, end=end)
-    return data
+if ticker:
+    stock = yf.Ticker(ticker)
 
-try:
-    data = load_data(ticker_symbol, start_date, end_date)
+    # Basic Info
+    info = stock.info
+    st.subheader("🏢 Company Info")
+    st.write(f"**Name:** {info.get('longName', 'N/A')}")
+    st.write(f"**Sector:** {info.get('sector', 'N/A')}")
+    st.write(f"**Industry:** {info.get('industry', 'N/A')}")
+    st.write(f"**Market Cap:** {info.get('marketCap', 'N/A')}")
+    st.write(f"**P/E Ratio:** {info.get('trailingPE', 'N/A')}")
 
-    if data.empty:
-        st.warning("No data found for the selected ticker and date range.")
-    else:
-        st.subheader(f"Stock Price Data for {ticker_symbol.upper()}")
-        st.dataframe(data.tail())
+    # Historical Data
+    st.subheader("📉 Historical Data (since 1999)")
+    data = yf.download(ticker, start='1999-01-01', end='2025-07-27')
+    st.dataframe(data.tail())
 
-        # Candlestick chart
-        st.subheader("Candlestick Chart")
-        fig = go.Figure(data=[go.Candlestick(x=data.index,
-                                             open=data['Open'],
-                                             high=data['High'],
-                                             low=data['Low'],
-                                             close=data['Close'])])
-        fig.update_layout(xaxis_rangeslider_visible=False, height=600)
-        st.plotly_chart(fig, use_container_width=True)
-except Exception as e:
-    st.error(f"An error occurred: {e}")
+    # Real-time price
+    price = stock.history(period='2d')['Close'][0]
+    st.metric(label=f"{ticker} Real-Time Price (Close)", value=f"${price:.2f}")
+
+    # Financial Statements
+    st.subheader("📑 Financials")
+    st.write("**Balance Sheet:**")
+    st.dataframe(stock.balance_sheet)
+
+    st.write("**Income Statement:**")
+    st.dataframe(stock.financials)
+
+    # Monthly Volume Pie Chart
+    st.subheader("📦 Monthly Trading Volume (Last 6 Months)")
+    hist = stock.history(period="6mo")
+    monthly_volume = hist['Volume'].resample('ME').sum()
+
+    fig, ax = plt.subplots(figsize=(6,6))
+    ax.pie(monthly_volume, labels=monthly_volume.index.strftime('%b %Y'),
+           autopct='%1.1f%%', colors=plt.cm.Paired.colors)
+    ax.set_title(f'{ticker} - Monthly Volume Distribution')
+    st.pyplot(fig)
