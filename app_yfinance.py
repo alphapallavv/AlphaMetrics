@@ -38,28 +38,26 @@ ticker = st.text_input("Enter Company Ticker (e.g. TSLA, AAPL, MSFT):", value="T
 try:
     data = yf.download(ticker, period=period, interval=interval)
 
-    # 👉 Fix for MultiIndex columns
-    if isinstance(data.columns, pd.MultiIndex):
-        data.columns = data.columns.get_level_values(1)
-
-    if data is not None and not data.empty:
-        st.success(f"Data for {ticker.upper()} fetched successfully.")
+    if not data.empty:
+        st.success("Data fetched successfully.")
         st.dataframe(data.tail())
 
-        # Moving Average
-        st.subheader("Moving Average")
-        ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
+        # Plot
+        st.line_chart(data["Close"], use_container_width=True)
 
-        if "Close" in data.columns and len(data) >= ma_days:
-            data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
-            st.line_chart(data[[f"MA_{ma_days}", "Close"]].dropna(), use_container_width=True)
-        else:
-            st.warning("Not enough data for Moving Average or 'Close' column missing.")
+        # Moving Average
+        ma_days = st.slider("Select Moving Average Window (days)", min_value=5, max_value=50, value=20)
+        data[f"MA_{ma_days}"] = data["Close"].rolling(window=ma_days).mean()
+
     else:
-        st.warning("No data found. Please check the ticker, period, or interval.")
+        st.warning("No data found. Please check the ticker symbol.")
 
 except Exception as e:
-    st.error(f"Error fetching data: {str(e)}")
+    st.error("Error fetching data. Please ensure the ticker is correct.")
+
+
+if ticker:
+    stock = yf.Ticker(ticker)
 if ticker:
     stock = yf.Ticker(ticker)
     # Basic Info
